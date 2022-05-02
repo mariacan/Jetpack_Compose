@@ -7,7 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -21,24 +25,52 @@ import androidx.compose.ui.unit.dp
 import com.example.jetpackcompose.ui.theme.JetpackComposeTheme
 import java.time.format.TextStyle
 
+private val messages: List<MyMessage> = listOf(
+    MyMessage("Hola Jetpack Compose", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 2", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 3", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 4", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 5", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 6", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 7", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 8", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 9", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 10", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 11", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 12", "¿Preparado?"),
+    MyMessage("Hola Jetpack Compose 13", "¿Preparado?"))
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent{
         //Se llama y también se debe poner en el PreviewComponent Para verlo
             JetpackComposeTheme {
-                MyComponent()
+                MyMessages(messages)
             }
         }
     }
-} /*Los modificadores(Modifier) permiten cambiar la apariencia de cada
+}       // Abajo empiezan las funciones
+data class MyMessage(val title: String, val body: String)
+
+@Composable //Composable = Para pintarse como element basic
+fun MyMessages(messages: List<MyMessage>){ //Hace referiencia al supuesto listado de mensajes
+    LazyColumn{
+        items(messages) { message ->
+            MyComponent(message)
+        }
+    }
+}
+
+/*Los modificadores(Modifier) permiten cambiar la apariencia de cada
     uno de nuestros elemntos(tamaños, distancias, colores, funtes)*/
 @Composable
-fun MyComponent(){
-    Row(modifier = Modifier.background(MaterialTheme.colors.background)
+fun MyComponent(message: MyMessage){
+    Row(modifier = Modifier
+        .background(MaterialTheme.colors.background)
         .padding(8.dp)) {
         MyImage()
-        MyTexts()
+        MyTexts(message)
     }
 }
 
@@ -56,14 +88,16 @@ fun MyImage(){
 }
 //Mostrarlo de manera ordenada en una columna (Uno debajo del otro)
 @Composable
-fun MyTexts(){
+fun MyTexts(message: MyMessage){
     Column(modifier = Modifier.padding(start = 8.dp)) {
-        MyText("¡Hola Jetpack Compose!",
+        MyText(
+            message.title,
             MaterialTheme.colors.primary,
             MaterialTheme.typography.subtitle1
         )
         Spacer(modifier = Modifier.height(16.dp)) //Separación entre columnas
-        MyText("¿Preparado?",
+        MyText(
+            message.body,
             MaterialTheme.colors.onBackground,
             MaterialTheme.typography.subtitle2
         )
@@ -76,11 +110,11 @@ fun MyText(text: String, color: Color, style: androidx.compose.ui.text.TextStyle
     Text(text, color = color, style = style)
 }
 //PREVIEW VISUALIZER
-@Preview()
+@Preview(showSystemUi = true) //Para mostrarlo como emulador virtual
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewComponent (){
     JetpackComposeTheme {
-        MyComponent()
+        MyMessages(messages)
     }
 }
